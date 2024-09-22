@@ -1,71 +1,123 @@
-# NFT Diplomas: Issue NFTs as Verifiable Diplomas
+# Tokenized Educational Competitions: Host Competitions with Token Rewards
 
 ## Vision
 
-NFT Diplomas revolutionize the way academic achievements are verified and shared. By issuing diplomas as NFTs on the Aptos blockchain, we ensure that graduate credentials are verifiable, secure, and immutable. This modern approach removes the hassle of traditional diploma verification processes and provides a decentralized method to preserve educational achievements for both institutions and graduates.
+**Tokenized Educational Competitions** is a decentralized platform that brings a new dimension to student and academic competitions by leveraging blockchain technology. The vision is to empower educational institutions and competition organizers to host academic, sports, or skill-based contests with real cryptocurrency rewards for winners. This not only incentivizes participation but also ensures transparency in reward distribution.
 
-With NFT Diplomas, universities can issue unique, cryptographically secured diplomas that students can store in their wallets and share with potential employers, while offering an easy way for employers to validate the authenticity of academic records.
+By using the Aptos blockchain, our platform offers immutable, trustless competition hosting, where prize pools are managed through smart contracts and rewards are distributed automatically to winners. This creates a fair and transparent system that eliminates middlemen and ensures that all participants have an equal chance to claim the prizes they’ve earned.
 
 ## Features
 
-### 🎓 **Diploma as NFTs**
-- Issue unique, verifiable diplomas as NFTs using the **Aptos** blockchain.
-- Diplomas are immutable and secured by blockchain technology.
+### 🏆 **Decentralized Competition Hosting**
+- Educational institutions or competition organizers can host tokenized competitions.
+- Prize pools are set up and managed via the blockchain, eliminating the need for third-party management.
 
-### 🔐 **Verified and Secure**
-- Each diploma issued is cryptographically signed by the university, ensuring trust and authenticity.
-- Graduates can store their diplomas in their Aptos-compatible wallet (e.g., Martian Wallet).
+### 💰 **Prize Pool in Tokens**
+- The prize pool is stored in AptosCoin (APT), and is transparently managed through the smart contract.
+- Participants can view the prize pool, ensuring trust and motivation.
 
-### 🌍 **Easy Verification**
-- Employers and other entities can easily verify the authenticity of a graduate’s diploma on the Aptos blockchain without intermediaries.
+### 🥇 **Automatic Winner Declaration**
+- Once a competition is concluded, the organizer can declare a winner by providing their wallet address.
+- The prize pool is automatically transferred to the winner's wallet upon declaration.
 
-### 🏛️ **University Issuance**
-- Universities act as the "issuer" of diplomas and can mint these NFT diplomas using their private key.
+### 🔒 **Secure & Transparent**
+- All prize pools and transactions are secured by the Aptos blockchain.
+- Immutable records of winners and prize distribution, ensuring transparency in competition outcomes.
+
+### 🚀 **Blockchain-Powered**
+- Built on the Aptos blockchain using Move smart contracts, providing fast, secure, and low-cost transactions.
   
-### 👨‍🎓 **Graduate Benefits**
-- Graduates receive their diplomas as NFTs directly in their wallets.
-- Diplomas are permanent, unchangeable, and fully transferable as proofs of their academic achievements.
-
-### 🚀 **Full-Stack Implementation**
-- Built with a **React** frontend for user interactions.
-- **Node.js** backend for handling diploma issuance requests and interacting with the blockchain.
-- **Move** smart contracts on Aptos to handle the minting and validation of NFT diplomas.
-
 ## Move Smart Contract
-The smart contract for diploma issuance is written in Aptos' **Move** language and enables the minting of NFTs for each issued diploma.
+
+The core of the platform is a Move-based smart contract that allows organizers to initialize competitions, deposit prize pools, and declare winners. Below is an overview of the main functions:
+
+```move
+module educational_competition::competition {
+    use std::signer;
+    use aptos_framework::coin;
+    use aptos_framework::aptos_coin::AptosCoin;
+
+    struct Competition has key {
+        prize_pool: u64,
+        winner: address,
+    }
+
+    const E_NOT_INITIALIZED: u64 = 1;
+    const E_ALREADY_INITIALIZED: u64 = 2;
+    const E_NOT_ENOUGH_BALANCE: u64 = 3;
+    const E_NOT_AUTHORIZED: u64 = 4;
+
+    public fun initialize_competition(account: &signer, initial_prize: u64) {
+        let account_addr = signer::address_of(account);
+        assert!(!exists<Competition>(account_addr), E_ALREADY_INITIALIZED);
+        assert!(coin::balance<AptosCoin>(account_addr) >= initial_prize, E_NOT_ENOUGH_BALANCE);
+
+        coin::transfer<AptosCoin>(account, @educational_competition, initial_prize);
+
+        move_to(account, Competition {
+            prize_pool: initial_prize,
+            winner: @0x0,
+        });
+    }
+
+    public entry fun declare_winner(account: &signer, winner_address: address) acquires Competition {
+        let account_addr = signer::address_of(account);
+        assert!(exists<Competition>(account_addr), E_NOT_INITIALIZED);
+        assert!(account_addr == @educational_competition, E_NOT_AUTHORIZED);
+
+        let competition = borrow_global_mut<Competition>(account_addr);
+        competition.winner = winner_address;
+
+        coin::transfer<AptosCoin>(&account, winner_address, competition.prize_pool);
+        competition.prize_pool = 0;
+    }
+}
+```
 
 ## How It Works
 
-1. **Connect a Wallet:** Universities and students can connect their Aptos-compatible wallets.
-2. **Mint NFT Diploma:** The university uses the platform to mint an NFT diploma for the student.
-3. **View Diploma:** The diploma is issued to the student’s wallet, and they can view it via any Aptos blockchain explorer.
-4. **Verify:** Employers can verify the diploma by checking its existence and validity on the blockchain.
+1. **Create a Competition:**
+   - An organizer (educational institution or competition holder) can initialize a new competition by setting up a prize pool in AptosCoin.
+   
+2. **Declare the Winner:**
+   - After the competition, the organizer declares the winner by providing their wallet address.
+   - The smart contract automatically transfers the prize pool to the winner’s wallet.
+
+3. **Blockchain Transparency:**
+   - All prize pools, competition details, and winner information are stored immutably on the Aptos blockchain.
 
 ## Technology Stack
 
-- **Frontend:** React.js
-- **Backend:** Node.js, Express
-- **Blockchain:** Aptos (Move language)
-- **Wallet Integration:** Martian Wallet (or other Aptos wallets)
+- **Backend:** Aptos Blockchain, Move Smart Contracts
+- **Frontend:** React.js (optional for user interaction)
+- **Token:** AptosCoin (APT) as the reward token
 
 ## Setup
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/nft-diplomas.git
+   git clone https://github.com/your-repo/educational-competitions.git
    ```
-2. Install dependencies:
+
+2. Install dependencies (for a Node.js backend):
    ```bash
    npm install
    ```
-3. Deploy the smart contract to Aptos testnet or mainnet using:
+
+3. Deploy the Move smart contract to Aptos testnet or mainnet:
    ```bash
    aptos move publish --account-name <your-account-name>
    ```
 
+4. Set up the frontend (React.js) for user interactions and competition management.
+
 ## Contact
 
-For any queries or contributions, feel free to reach out:
+For questions or contributions, feel free to contact:
 
-- **Email:** mainak2ms@gmail.com
-- **GitHub:** https://github.com/Starhopperr
+- **Email:** yourname@example.com
+- **GitHub:** [your-github-username](https://github.com/Starhopperr)
+
+##Deployment:
+Contact address:
+Transaction Hash: 
