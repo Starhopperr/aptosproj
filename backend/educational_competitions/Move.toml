@@ -1,0 +1,15 @@
+[package]
+name = "T-E-C"
+version = "1.0.0"
+authors = []
+
+[addresses]
+tec_addr = '7a5653132160a62d5042b1eb5ee1c54b5e394e6bbf79dcbd2b16309d43c77e68'
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
