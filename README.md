@@ -1,4 +1,4 @@
-# Tokenized Educational Competitions: Host Competitions with Token Rewards
+Aman Shukla # Tokenized Educational Competitions: Host Competitions with Token Rewards
 
 ## Vision
 
