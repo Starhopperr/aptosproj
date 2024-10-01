@@ -1,9 +1,0 @@
----
-profiles:
-  default:
-    network: Devnet
-    private_key: "0x7873533afcb81df39a68e512d1992d9c0443e4aa477025bb96ed4c2a69ffd261"
-    public_key: "0xd5c275f941877b1130d9226b81cffe7c964b94383e1c0dfa4c1980eff830f1e0"
-    account: 3b072a90cbcc385a1ab0ab931e2326dac31814aa4a79a16c4d8b319f426a7844
-    rest_url: "https://fullnode.devnet.aptoslabs.com"
-    faucet_url: "https://faucet.devnet.aptoslabs.com"
