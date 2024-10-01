@@ -1,4 +1,4 @@
-module educational_competition::competition {
+module tec_addr::competition {
     use std::signer;
     use std::error;
     use std::string;
