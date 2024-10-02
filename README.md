@@ -120,8 +120,8 @@ The **Tokenized Educational Competitions** project is a decentralized platform f
 For any questions or support, feel free to reach out:
 
 - **Name**: Mainak Sarkar
-- **Email**: your.email@example.com
-- **LinkedIn**: `https://www.linkedin.com/in/your-linkedin/`
+- **Email**: mainak2ms@gmail.com
+- **LinkedIn**: `https://www.linkedin.com/in/starhoppersenpai/`
 - **GitHub**: `https://github.com/Starhopperr`
 
 ## Future Scope
